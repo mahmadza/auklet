@@ -2,7 +2,6 @@
 set -o errexit
 set -o pipefail
 
-
 ################################################################################
 # Parse input and check for errors
 ################################################################################
@@ -12,8 +11,8 @@ radius=20000                                                          #window si
 extend_length=0                                                           #extend length of the reads. default=0 for paired-end reads
 down_sample_size=50                                                       #size of downsampling of the individual nucleotide positions
 pseudo_count=1                                                            #pseudo-count to be added to input in cof_ratio.py
-fixbed_sh=/groups/stark/zabidi/work/TCT_STARR/utils/fixBed.sh           #path to fixBed.sh (similar to bedClip, but correct lines > or < chromosomes, and removes $3>$2 lines)
-transpose_awk=/groups/stark/zabidi/work/TCT_STARR/utils/transpose.awk     #path to transposase.awk
+fixbed_sh=/XXXXXX/fixBed.sh           #path to fixBed.sh (similar to bedClip, but correct lines > or < chromosomes, and removes $3>$2 lines)
+transpose_awk=/XXXXX/transpose.awk     #path to transposase.awk
 z_score=1.67
 
 ################################################################################
@@ -22,7 +21,7 @@ z_score=1.67
 
 if [ $# -eq 0 ]; then
   echo >&2 "
-$(basename $0) - Calculate confidence ratio of read density from STARR-Seq or ChIP for visualization in heatmap
+$(basename $0) - Calculate odds ratio of read density from STARR-Seq or ChIP for visualization in heatmap
 
 USAGE: $(basename $0) -r <reference experiment bed file> -e <experiment bigbed file> -i <input bigbed file> -o <output matrix .txt file> [OPTIONS]
 
@@ -89,7 +88,7 @@ fi
 window=$(mktemp)
 cat $reference | \
     awk -vOFS="\t" '{print $1,$7,$8,$4}' | \
-        /groups/stark/zabidi/work/TCT_STARR/utils/expandBed.sh -g $genome -r $radius > $window
+        /XXXX/expandBed.sh -g $genome -r $radius > $window
 
 
 ##########################
@@ -142,7 +141,7 @@ for signal in experiment input; do
 
     #correct peaks that are too close to chromosome starts
     cat $reference | \
-        awk -vflank=$radius -vOFS="\t" -vgenome_file=/groups/stark/genomes/chrom/${genome}.chrom.sizes 'BEGIN{
+        awk -vflank=$radius -vOFS="\t" -vgenome_file=/XXXXX/${genome}.chrom.sizes 'BEGIN{
              while((getline<genome_file)>0)
                   chrsize[$1]=$2  
             }
@@ -173,7 +172,7 @@ for signal in experiment input; do
                 
     #correct peaks that are too close to chromosome ends
     cat $reference | \
-        awk -vflank=$radius -vOFS="\t" -vgenome_file=/groups/stark/genomes/chrom/${genome}.chrom.sizes 'BEGIN{
+        awk -vflank=$radius -vOFS="\t" -vgenome_file=/XXXX/${genome}.chrom.sizes 'BEGIN{
              while((getline<genome_file)>0)
                   chrsize[$1]=$2  
             }
