@@ -2,9 +2,6 @@
 set -o errexit
 set -o pipefail
 
-module load ncbi-blast+/2.4.0
-
-
 ################################################################################
 # Help
 ################################################################################
@@ -45,11 +42,11 @@ while read line; do
     id=$(echo $line | awk -vOFS="_" -vleft=$begin -vright=$finish '{if($6=="+") $NF="plus"; if($6=="-") $NF="minus";$2=left-1;$3=right;print $0}')
     #keep the id as bed
 
-    #access database, then remove the line ">lcl|chr2L:132426-132526 No definition line found"
+    #access database, then remove the line ex. ">lcl|chr2L:132426-132526 No definition line found"
     #and put my own ID
     #$genome needs to point to the genome index. modify appropriately
-    fastacmd -d $genome -s $chr -L$begin,$finish -S $strand | \
+    fastacmd -d /groups/stark/blastdb/${genome} -s $chr -L$begin,$finish -S $strand | \
             awk -vchrmsm=$chr -vstart=$begin -vfin=$finish -vname=$id '(!/^>/){line=line $1}
                 END{print ">"name; print line}'
-                
+
 done
